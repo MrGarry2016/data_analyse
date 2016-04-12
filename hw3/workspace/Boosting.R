@@ -1,4 +1,5 @@
 library(ada)
+library(pROC)
 setwd("/Users/huangge/GoogleCloudDrive/6740/hw3/workspace")
 data = read.csv("cleandata.csv")[,-1]
 myy = data[,1]
