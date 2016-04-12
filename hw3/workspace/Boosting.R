@@ -1,9 +1,10 @@
 library(ada)
 library(pROC)
-setwd("/Users/huangge/GoogleCloudDrive/6740/hw3/workspace")
 data = read.csv("cleandata.csv")[,-1]
 myy = data[,1]
 myx = data.matrix(data[,-1])
+n = dim(myx)[1]
+p = dim(myx)[2]
 
 ##learn model
 model = ada(myx,myy )
