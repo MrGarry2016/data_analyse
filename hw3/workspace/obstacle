@@ -4,3 +4,6 @@ solu: data.matrix()
 2. get response by name is hard for data.frame
 solu1: data[,!colnames(data) %in% "ANGLE.CLOSURE""]
 solum: move response in first column in imputation step
+
+3. find qualified index in case and control using names(myx
+problem: names in myx: a_b, names in case a.b. not match
