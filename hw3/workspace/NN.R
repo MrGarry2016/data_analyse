@@ -16,15 +16,15 @@ roc = roc(data[,1],pred)
 
 
 ##start CV
-Niter = 20
+Niter = 100
 kfold = 10
 ##1.specify your parameter here
 ##size
-para = sapply(seq(6,10,3),function(xx){
+para = sapply(seq(6,40,3),function(xx){
   return((xx))
 })
 ##decay
-para2 = sapply(seq(0.5,2,0.5),function(xx){
+para2 = sapply(seq(0.5,10,0.5),function(xx){
   return((xx))
 })
 auc.res = array(NA,c(Niter,length(para),length(para2)))
