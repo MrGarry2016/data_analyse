@@ -16,15 +16,15 @@ roc = roc(data[,1],pred)
 
 
 ##start CV
-Niter = 100
+Niter = 20
 kfold = 10
 ##1.specify your parameter here
 ##size
-para = sapply(seq(6,50,2),function(xx){
+para = sapply(seq(6,10,3),function(xx){
   return((xx))
 })
 ##decay
-para2 = sapply(seq(0.5,10,0.5),function(xx){
+para2 = sapply(seq(0.5,2,0.5),function(xx){
   return((xx))
 })
 auc.res = array(NA,c(Niter,length(para),length(para2)))
@@ -33,8 +33,10 @@ for(j in 1:Niter){
   for(i in 1:length(para)){
     for(k in 1:length(para2)){  
       print(j)
+      print(para[i])
+      print(para2[k])
       ##modelling
-      model = nnet(ANGLE.CLOSURE~.,data = data[-testID,], size = 6,decay = 0.5 )
+      model = nnet(ANGLE.CLOSURE~.,data = data[-testID,], size = para[i],decay = para2[k] )
       yhat = predict(model,data[testID,],type = "raw")
       roc = roc(myy[testID,], yhat)
       auc.res[j,i,k] = auc(roc)
