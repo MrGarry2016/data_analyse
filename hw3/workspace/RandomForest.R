@@ -8,7 +8,6 @@ n = dim(myx)[1]
 p = dim(myx)[2]
 set.seed(71)
 
-
 #### start CV
 Niter = 100
 kfold = 10
