@@ -36,7 +36,6 @@ for(j in 1:Niter){
 }
 
 
-
 auc.list = apply(auc.res,2,mean)
 bestpara = para[which.max(auc.list)]
 plot(para,auc.list)

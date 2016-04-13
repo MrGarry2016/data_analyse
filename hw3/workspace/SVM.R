@@ -40,10 +40,15 @@ for(j in 1:Niter){
   }
 }
 auc.list = apply(auc.res,c(2,3),mean)
-dput(auc.res,"auc.res.svm.r")
 levelplot(auc.list)
 ##bestpara = para[which.max(auc.list)]
 dput(para,"svm.cost.para.r")
 dput(para2,"svm.gamma.para.r")
 dput(auc.res,"auc.res.svm.r")
+
+##read data
+svm.cost.para.r = dget("svm.cost.para.r")
+svm.gamma.para.r = dget("svm.gamma.para.r")
+auc.res = dget("auc.res.svm.r")
+
 
