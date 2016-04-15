@@ -1,5 +1,5 @@
 rm(list=ls())
-library(nnet)
+library(kknn)
 library(pROC)
 library(lattice)
 data = read.csv("cleandata.csv")[,-1]
@@ -8,23 +8,22 @@ myx = data.matrix(data[,-1])
 n =dim(myx)[1]
 p =dim(myx)[2]
 
-
 ##learn model
-model = nnet(ANGLE.CLOSURE~.,data = data, size = 6,decay = 0.5 )
+model = kknn(ANGLE.CLOSURE~.,train = data,test = data, k = 10,distance = 3 )
 pred = predict(model,data,type = "raw")
-roc = roc(data[,1],pred)
+roc = roc(data[,1],as.numeric(pred))
 
 
 ##start CV
 Niter = 100
 kfold = 10
 ##1.specify your parameter here
-##size
-para = sapply(seq(6,40,3),function(xx){
+##k
+para = sapply(seq(1,100,3),function(xx){
   return((xx))
 })
-##decay
-para2 = sapply(seq(0.5,10,0.5),function(xx){
+##distance
+para2 = sapply(seq(1,10,0.5),function(xx){
   return((xx))
 })
 auc.res = array(NA,c(Niter,length(para),length(para2)))
@@ -36,24 +35,25 @@ for(j in 1:Niter){
       print(para[i])
       print(para2[k])
       ##modelling
-      model = nnet(ANGLE.CLOSURE~.,data = data[-testID,], size = para[i],decay = para2[k] )
-      yhat = predict(model,data[testID,],type = "raw")
-      roc = roc(myy[testID,], yhat)
+      model = kknn(ANGLE.CLOSURE~.,train = data[-testID,],test = data[testID,], k = para[i],distance = para2[k] )
+      yhat = model$prob
+      roc = roc(myy[testID,], yhat[,1])
       auc.res[j,i,k] = auc(roc)
+      print(auc.res[j,i,k])
     }
   }
 }
 auc.list = apply(auc.res,c(2,3),mean)
 levelplot(auc.list)
 ##bestpara = para[which.max(auc.list)]
-dput(para,"nn.size.para.r")
-dput(para2,"nn.decay.para.r")
-dput(auc.res,"auc.res.nn.r")
+dput(para,"knn.k.para.r")
+dput(para2,"knn.distance.para.r")
+dput(auc.res,"auc.res.knn.r")
 
 ##read data
-nn.size.para.r = dget("nn.size.para.r")
-nn.decay.para.r = dget("nn.decay.para.r")
-auc.res = dget("auc.res.nn.r")
+#nn.size.para.r = dget("knn.k.para.r")
+#nn.decay.para.r = dget("knn.distance.para.r")
+#auc.res = dget("auc.res.knn.r")
 
 
 
