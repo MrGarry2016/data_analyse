@@ -19,7 +19,7 @@ Niter = 100
 kfold = 10
 ##1.specify your parameter here
 ##k
-para = sapply(seq(1,100,3),function(xx){
+para = sapply(seq(1,100,2),function(xx){
   return((xx))
 })
 ##distance
