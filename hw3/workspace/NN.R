@@ -43,8 +43,6 @@ for(j in 1:Niter){
     }
   }
 }
-auc.list = apply(auc.res,c(2,3),mean)
-levelplot(auc.list)
 ##bestpara = para[which.max(auc.list)]
 dput(para,"nn.size.para.r")
 dput(para2,"nn.decay.para.r")
@@ -54,6 +52,23 @@ dput(auc.res,"auc.res.nn.r")
 nn.size.para.r = dget("nn.size.para.r")
 nn.decay.para.r = dget("nn.decay.para.r")
 auc.res = dget("auc.res.nn.r")
+
+mytest = dget("mytest.r")
+
+
+auc.list = apply(auc.res,c(2,3),mean)
+levelplot(auc.list)
+bestpara_pos = which(auc.list == max(auc.list), arr.ind = TRUE)
+bestpara1 = nn.size.para.r[bestpara_pos[1]]
+bestpara2 = nn.decay.para.r[bestpara_pos[2]]
+
+model = nnet(ANGLE.CLOSURE~.,data = data, size = bestpara1,decay = bestpara2 )
+yhat = predict(model,mytest,type = "raw")
+roc = roc(mytest[,1], yhat)
+auc(roc)
+
+
+
 
 
 
