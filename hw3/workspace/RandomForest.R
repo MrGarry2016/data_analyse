@@ -22,9 +22,9 @@ for(j in 1:Niter){
     print(j)
     print(para[i])
     ##2. change modelling
-    model = randomForest(myx[-testID,],myy[-testID],ntree  = para[i], probability = T)
+    model = randomForest(myx[-testID,],myy[-testID,],ntree  = para[i], probability = T)
     yhat = predict(model,myx[testID,],type = "prob")
-    roc = roc(myy[testID], yhat[,1])
+    roc = roc(myy[testID,], yhat[,1])
     auc.res[j,i] = auc(roc)
   }
 }
@@ -43,4 +43,13 @@ dput(rf_best_model,"2-rf_best_model.r")
 para = dget("2-rf.para.r")
 auc.res = dget("2-auc.res.rf.r")
 
+mytest = dget("mytest.r")
 
+auc.list = apply(auc.res,2,mean)
+bestpara = para[which.max(auc.list)]
+plot(para,auc.list)
+
+model = randomForest(myx,myy[,1],ntree  = bestpara, probability = T)
+yhat = predict(model,mytest,type = "prob")
+roc = roc(mytest[,1], yhat[,1])
+auc(roc)
