@@ -11,7 +11,6 @@ model = ada(myx[,],myy[,1] )
 pred = predict(model,as.data.frame(myx))
 
 ##check prediiction
-table(pred,myy)
 
 
 #### start CV
