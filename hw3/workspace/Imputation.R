@@ -1,6 +1,6 @@
 setwd("/Users/huangge/GoogleCloudDrive/6740/hw3/workspace")
 mydata = read.csv("AngleClosure.csv")
-mydata = as.matrix(mydata[,-1])
+mydata = as.matrix(mydata)
 
 ##delete EYE, GENDER, and ETHNIC
 ##Omit the variables HGT, WT, ASPH, ACYL, SE, AXL, CACD, AGE, CCT.OD, and PCCURV_mm

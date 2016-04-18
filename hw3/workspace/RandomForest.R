@@ -1,6 +1,5 @@
 library(randomForest)
 library(pROC)
-setwd("/Users/huangge/GoogleCloudDrive/6740/hw3/workspace")
 data = read.csv("cleandata.csv")[,-1]
 myy = data[,1,drop = F]
 myx = data.matrix(data[,-1])
@@ -33,8 +32,6 @@ auc.list = apply(auc.res,2,mean)
 bestpara = para[which.max(auc.list)]
 plot(para,auc.list)
 
-rf_best_model = randomForest(myx,myy,ntree  = bestpara, probability = T)
-
 dput(para,"2-rf.para.r")
 dput(auc.res,"2-auc.res.rf.r")
 dput(rf_best_model,"2-rf_best_model.r")
@@ -42,8 +39,11 @@ dput(rf_best_model,"2-rf_best_model.r")
 ## read para ###
 para = dget("2-rf.para.r")
 auc.res = dget("2-auc.res.rf.r")
-
 mytest = dget("mytest.r")
+
+data = read.csv("cleandata.csv")[,-1]
+myy = data[,1,drop = F]
+myx = data.matrix(data[,-1])
 
 auc.list = apply(auc.res,2,mean)
 bestpara = para[which.max(auc.list)]
@@ -53,3 +53,4 @@ model = randomForest(myx,myy[,1],ntree  = bestpara, probability = T)
 yhat = predict(model,mytest,type = "prob")
 roc = roc(mytest[,1], yhat[,1])
 auc(roc)
+plot(roc)

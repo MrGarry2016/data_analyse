@@ -54,18 +54,21 @@ nn.decay.para.r = dget("nn.decay.para.r")
 auc.res = dget("auc.res.nn.r")
 
 mytest = dget("mytest.r")
-
+data = read.csv("cleandata.csv")[,-1]
+myy = data[,1,drop=F]
+myx = data.matrix(data[,-1])
 
 auc.list = apply(auc.res,c(2,3),mean)
 levelplot(auc.list)
 bestpara_pos = which(auc.list == max(auc.list), arr.ind = TRUE)
-bestpara1 = nn.size.para.r[bestpara_pos[1]]
-bestpara2 = nn.decay.para.r[bestpara_pos[2]]
+bestpara1 = nn.size.para.r[bestpara_pos[1]]##6
+bestpara2 = nn.decay.para.r[bestpara_pos[2]]##0.5
 
 model = nnet(ANGLE.CLOSURE~.,data = data, size = bestpara1,decay = bestpara2 )
 yhat = predict(model,mytest,type = "raw")
 roc = roc(mytest[,1], yhat)
-auc(roc)
+auc(roc)##0.9711
+plot(roc)
 
 
 

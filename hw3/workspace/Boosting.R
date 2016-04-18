@@ -44,7 +44,20 @@ dput(auc.res,"2-au.res.ada.r")
 
 
 ## read data ##
-#para = dget("2-ada.para.r")
-#auc.res = dget("2-au.res.ada.r")
-#ada_best_model = dget("2-ada_best_model.r")
+para = dget("2-ada.para.r")
+auc.res = dget("2-au.res.ada.r")
+mytest = dget("mytest.r")
 
+data = read.csv("cleandata.csv")[,-1]
+myy = data[,1,drop = F]
+myx = data.matrix(data[,-1])
+
+auc.list = apply(auc.res,2,mean)
+bestpara = para[which.max(auc.list)]##0.1
+plot(para,auc.list)
+
+model = ada(myx[,],myy[,1] ,nu=bestpara)
+yhat = predict(model,as.data.frame(mytest[,]),type = "prob")
+roc = roc(mytest[,1], yhat[,1])
+auc(roc)##0.9626
+plot(roc)

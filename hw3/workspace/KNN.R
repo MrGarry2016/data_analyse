@@ -43,17 +43,34 @@ for(j in 1:Niter){
     }
   }
 }
-auc.list = apply(auc.res,c(2,3),mean)
-levelplot(auc.list)
+
 ##bestpara = para[which.max(auc.list)]
 dput(para,"knn.k.para.r")
 dput(para2,"knn.distance.para.r")
 dput(auc.res,"auc.res.knn.r")
 
 ##read data
-#nn.size.para.r = dget("knn.k.para.r")
-#nn.decay.para.r = dget("knn.distance.para.r")
-#auc.res = dget("auc.res.knn.r")
+nn.k.para.r = dget("knn.k.para.r")
+nn.distance.para.r = dget("knn.distance.para.r")
+auc.res = dget("auc.res.knn.r")
+mytest = dget("mytest.r")
+
+data = read.csv("cleandata.csv")[,-1]
+myy = data[,1,drop=F]
+myx = data.matrix(data[,-1])
 
 
+auc.list = apply(auc.res,c(2,3),mean)
+levelplot(auc.list)
 
+
+bestpara_pos = which(auc.list == max(auc.list), arr.ind = TRUE)
+bestpara1 = nn.k.para.r[bestpara_pos[1]]##99
+bestpara2 = nn.distance.para.r[bestpara_pos[2]]##1
+
+
+model = kknn(ANGLE.CLOSURE~.,train = data[,],test = mytest[,],k=bestpara1,distance = bestpara2 )
+yhat = model$prob
+roc = roc(mytest[,1], yhat[,1])
+auc(roc)##0.959
+plot(roc)
